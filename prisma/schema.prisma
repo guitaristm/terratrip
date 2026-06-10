@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  name        String?
+  avatarUrl   String?
+  currency    String       @default("THB")
+  theme       String       @default("light")
+  notifications Boolean    @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  trips       TripMember[]
+}
+
+model Trip {
+  id          String       @id @default(cuid())
+  name        String
+  country     String
+  startDate   DateTime
+  endDate     DateTime
+  budget      Float        @default(0)
+  currency    String       @default("THB")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  members     TripMember[]
+  days        ItineraryDay[]
+  expenses    Expense[]
+}
+
+model TripMember {
+  id        String   @id @default(cuid())
+  tripId    String
+  userId    String
+  role      String   @default("viewer") // owner, editor, viewer
+  invitedEmail String?
+  accepted  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([tripId, userId])
+}
+
+model ItineraryDay {
+  id        String         @id @default(cuid())
+  tripId    String
+  date      DateTime
+  title     String
+  order     Int            @default(0)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  trip      Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  items     ItineraryItem[]
+}
+
+model ItineraryItem {
+  id        String   @id @default(cuid())
+  dayId     String
+  time      String?
+  title     String
+  notes     String?
+  category  String   @default("other")
+  amount    Float?
+  currency  String   @default("THB")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  day       ItineraryDay @relation(fields: [dayId], references: [id], onDelete: Cascade)
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  tripId      String
+  title       String
+  amount      Float
+  currency    String   @default("THB")
+  baseAmount  Float?
+  baseCurrency String  @default("THB")
+  category    String   @default("other")
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+}
+
+model ExchangeRate {
+  id        String   @id @default(cuid())
+  from      String
+  to        String
+  rate      Float
+  updatedAt DateTime @updatedAt
+  @@unique([from, to])
+}
