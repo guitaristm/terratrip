@@ -98,7 +98,7 @@ export function ItemForm({ defaultValues, onSubmit, onCancel, submitLabel = "Sav
         <div className="space-y-1.5">
           <Label className="flex items-center justify-between">
             <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Location</span>
-            <button type="button" onClick={() => { setShowLocation(false); setValue("location", ""); }} className="text-stone-400 hover:text-stone-600"><X className="h-3.5 w-3.5" /></button>
+            <button type="button" onClick={() => { setShowLocation(false); setValue("location", ""); }} className="text-stone-400 dark:text-stone-500 hover:text-stone-600"><X className="h-3.5 w-3.5" /></button>
           </Label>
           <Input placeholder="Google Maps link or place name" {...register("location")} />
         </div>
@@ -109,7 +109,7 @@ export function ItemForm({ defaultValues, onSubmit, onCancel, submitLabel = "Sav
         <div className="space-y-1.5">
           <Label className="flex items-center justify-between">
             <span className="flex items-center gap-1.5"><LinkIcon className="h-3.5 w-3.5" /> Link</span>
-            <button type="button" onClick={() => { setShowLink(false); setValue("link", ""); }} className="text-stone-400 hover:text-stone-600"><X className="h-3.5 w-3.5" /></button>
+            <button type="button" onClick={() => { setShowLink(false); setValue("link", ""); }} className="text-stone-400 dark:text-stone-500 hover:text-stone-600"><X className="h-3.5 w-3.5" /></button>
           </Label>
           <Input placeholder="https://… (website, booking, etc.)" {...register("link")} />
         </div>
@@ -119,12 +119,12 @@ export function ItemForm({ defaultValues, onSubmit, onCancel, submitLabel = "Sav
       {(!showLocation || !showLink) && (
         <div className="flex flex-wrap gap-2">
           {!showLocation && (
-            <button type="button" onClick={() => setShowLocation(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-stone-300 px-3 py-1.5 text-xs font-medium text-stone-500 transition-colors hover:border-amber-300 hover:text-amber-600">
+            <button type="button" onClick={() => setShowLocation(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-stone-300 px-3 py-1.5 text-xs font-medium text-stone-500 dark:text-stone-400 transition-colors hover:border-amber-300 hover:text-amber-600">
               <MapPin className="h-3.5 w-3.5" /> Add location
             </button>
           )}
           {!showLink && (
-            <button type="button" onClick={() => setShowLink(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-stone-300 px-3 py-1.5 text-xs font-medium text-stone-500 transition-colors hover:border-amber-300 hover:text-amber-600">
+            <button type="button" onClick={() => setShowLink(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-stone-300 px-3 py-1.5 text-xs font-medium text-stone-500 dark:text-stone-400 transition-colors hover:border-amber-300 hover:text-amber-600">
               <LinkIcon className="h-3.5 w-3.5" /> Add link
             </button>
           )}

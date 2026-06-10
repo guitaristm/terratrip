@@ -13,9 +13,15 @@ export const metadata: Metadata = {
   description: "Plan trips, track expenses, and collaborate with friends.",
 };
 
+// Runs before paint to apply the saved theme and avoid a light flash.
+const themeScript = `try{var t=localStorage.getItem('tt_theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>
         <ToastProvider>
           <IdentityProvider>

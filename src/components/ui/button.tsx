@@ -10,10 +10,10 @@ const buttonVariants = cva(
       variant: {
         default: "bg-stone-800 text-stone-50 hover:bg-stone-700 shadow-sm",
         destructive: "bg-red-500 text-white hover:bg-red-600 shadow-sm",
-        outline: "border border-stone-200 bg-white hover:bg-stone-50 text-stone-800",
-        secondary: "bg-stone-100 text-stone-800 hover:bg-stone-200",
-        ghost: "hover:bg-stone-100 text-stone-700",
-        link: "text-stone-800 underline-offset-4 hover:underline",
+        outline: "border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 hover:bg-stone-50 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-100",
+        secondary: "bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-100 hover:bg-stone-200 dark:hover:bg-stone-700",
+        ghost: "hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-200",
+        link: "text-stone-800 dark:text-stone-100 underline-offset-4 hover:underline",
         primary: "bg-amber-600 text-white hover:bg-amber-700 shadow-sm",
       },
       size: {

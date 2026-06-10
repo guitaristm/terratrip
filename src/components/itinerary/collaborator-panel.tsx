@@ -65,17 +65,17 @@ export function CollaboratorPanel({ trip }: { trip: Trip }) {
     <div>
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h2 className="text-lg font-semibold text-stone-800">Collaborators</h2>
-          <p className="text-sm text-stone-500">{members.length} member{members.length !== 1 ? "s" : ""}</p>
+          <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">Collaborators</h2>
+          <p className="text-sm text-stone-500 dark:text-stone-400">{members.length} member{members.length !== 1 ? "s" : ""}</p>
         </div>
         <Button variant="primary" onClick={() => setInviteOpen(true)}><UserPlus className="h-4 w-4" /> Invite</Button>
       </div>
 
       {members.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-stone-200 py-12 text-center">
+        <div className="rounded-2xl border-2 border-dashed border-stone-200 dark:border-stone-700 py-12 text-center">
           <div className="mb-2 text-3xl">👥</div>
-          <p className="text-sm font-medium text-stone-500">No collaborators yet</p>
-          <p className="mt-1 text-xs text-stone-400">Share an invite link so friends can join this trip.</p>
+          <p className="text-sm font-medium text-stone-500 dark:text-stone-400">No collaborators yet</p>
+          <p className="mt-1 text-xs text-stone-400 dark:text-stone-500">Share an invite link so friends can join this trip.</p>
           <Button variant="primary" className="mt-4" onClick={() => setInviteOpen(true)}><UserPlus className="h-4 w-4" /> Invite</Button>
         </div>
       ) : (
@@ -83,13 +83,13 @@ export function CollaboratorPanel({ trip }: { trip: Trip }) {
           {members.map((member) => {
             const name = member.user?.name ?? "Traveler";
             return (
-            <div key={member.id} className="flex items-center gap-3 bg-white border border-stone-100 rounded-xl px-4 py-3">
-              <div className="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center text-sm font-semibold text-amber-700 shrink-0">
+            <div key={member.id} className="flex items-center gap-3 bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-xl px-4 py-3">
+              <div className="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center text-sm font-semibold text-amber-700 dark:text-amber-300 shrink-0">
                 {name[0].toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-stone-800 truncate">{name}</p>
-                <p className="text-xs text-stone-400 capitalize">
+                <p className="text-sm font-medium text-stone-800 dark:text-stone-100 truncate">{name}</p>
+                <p className="text-xs text-stone-400 dark:text-stone-500 capitalize">
                   {member.role}
                   {!member.accepted && <span className="ml-1 text-amber-500">· pending</span>}
                 </p>
@@ -118,11 +118,11 @@ export function CollaboratorPanel({ trip }: { trip: Trip }) {
         </div>
       )}
 
-      <div className="mt-6 bg-stone-50 rounded-xl p-4 text-xs text-stone-500 space-y-1.5">
-        <p className="font-medium text-stone-700 mb-2">Role permissions</p>
+      <div className="mt-6 bg-stone-50 dark:bg-stone-800/60 rounded-xl p-4 text-xs text-stone-500 dark:text-stone-400 space-y-1.5">
+        <p className="font-medium text-stone-700 dark:text-stone-200 mb-2">Role permissions</p>
         <div className="flex items-center gap-2"><Crown className="h-3 w-3 text-amber-600" /><strong>Owner</strong> — Full access</div>
         <div className="flex items-center gap-2"><Pencil className="h-3 w-3 text-blue-600" /><strong>Editor</strong> — Add/edit itinerary & expenses</div>
-        <div className="flex items-center gap-2"><Eye className="h-3 w-3 text-stone-400" /><strong>Viewer</strong> — Read-only</div>
+        <div className="flex items-center gap-2"><Eye className="h-3 w-3 text-stone-400 dark:text-stone-500" /><strong>Viewer</strong> — Read-only</div>
       </div>
 
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
@@ -144,12 +144,12 @@ export function CollaboratorPanel({ trip }: { trip: Trip }) {
             <div className="space-y-1.5">
               <Label className="flex items-center gap-1.5"><Link2 className="h-3.5 w-3.5" /> Invite link</Label>
               <div className="flex gap-2">
-                <Input readOnly value={inviteLink} onFocus={(e) => e.currentTarget.select()} className="text-xs text-stone-500" />
+                <Input readOnly value={inviteLink} onFocus={(e) => e.currentTarget.select()} className="text-xs text-stone-500 dark:text-stone-400" />
                 <Button type="button" variant="outline" onClick={copyLink} className="shrink-0 px-3">
                   {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
                 </Button>
               </div>
-              <p className="text-[11px] text-stone-400">
+              <p className="text-[11px] text-stone-400 dark:text-stone-500">
                 Send this link via any app. Whoever opens it just enters their name to join as <strong>{role}</strong>.
               </p>
             </div>

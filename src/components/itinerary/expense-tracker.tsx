@@ -118,7 +118,7 @@ function ExpenseForm({ defaultValues, participants, onSubmit, onCancel, submitLa
       <div className="space-y-1.5">
         <Label className="flex items-center gap-1.5"><Wallet className="h-3.5 w-3.5" /> Paid by</Label>
         {participants.length === 0 ? (
-          <p className="rounded-lg bg-stone-50 px-3 py-2 text-xs text-stone-400">
+          <p className="rounded-lg bg-stone-50 dark:bg-stone-800/60 px-3 py-2 text-xs text-stone-400 dark:text-stone-500">
             Invite people to the trip to track who paid.
           </p>
         ) : (
@@ -143,7 +143,7 @@ function ExpenseForm({ defaultValues, participants, onSubmit, onCancel, submitLa
               onClick={() => setSplitMode("none")}
               className={cn(
                 "rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
-                splitMode === "none" ? "border-amber-300 bg-amber-50 text-amber-700" : "border-stone-200 text-stone-600 hover:bg-stone-50"
+                splitMode === "none" ? "border-amber-300 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300" : "border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800"
               )}
             >
               Combine
@@ -153,7 +153,7 @@ function ExpenseForm({ defaultValues, participants, onSubmit, onCancel, submitLa
               onClick={() => setSplitMode("equal")}
               className={cn(
                 "rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
-                splitMode === "equal" ? "border-amber-300 bg-amber-50 text-amber-700" : "border-stone-200 text-stone-600 hover:bg-stone-50"
+                splitMode === "equal" ? "border-amber-300 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300" : "border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800"
               )}
             >
               Split equally
@@ -161,7 +161,7 @@ function ExpenseForm({ defaultValues, participants, onSubmit, onCancel, submitLa
           </div>
 
           {splitMode === "equal" && (
-            <div className="space-y-1.5 rounded-xl border border-stone-100 bg-stone-50/60 p-2">
+            <div className="space-y-1.5 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50/60 dark:bg-stone-900/60 p-2">
               {participants.map((p) => {
                 const on = splitWith.includes(p.id);
                 return (
@@ -173,18 +173,18 @@ function ExpenseForm({ defaultValues, participants, onSubmit, onCancel, submitLa
                   >
                     <span className={cn(
                       "flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded border",
-                      on ? "border-amber-500 bg-amber-500 text-white" : "border-stone-300 bg-white"
+                      on ? "border-amber-500 bg-amber-500 text-white" : "border-stone-300 bg-white dark:bg-stone-900"
                     )}>
                       {on && <Check className="h-3 w-3" />}
                     </span>
-                    <span className="flex-1 text-stone-700">{p.name}</span>
+                    <span className="flex-1 text-stone-700 dark:text-stone-200">{p.name}</span>
                     {on && perShare > 0 && (
-                      <span className="text-xs font-medium text-stone-500">{formatCurrency(perShare, currency)}</span>
+                      <span className="text-xs font-medium text-stone-500 dark:text-stone-400">{formatCurrency(perShare, currency)}</span>
                     )}
                   </button>
                 );
               })}
-              <p className="px-2 pt-1 text-[11px] text-stone-400">
+              <p className="px-2 pt-1 text-[11px] text-stone-400 dark:text-stone-500">
                 {splitWith.length > 0
                   ? `${formatCurrency(perShare, currency)} each · ${splitWith.length} ${splitWith.length === 1 ? "person" : "people"}`
                   : "Select who shares this expense."}
@@ -300,8 +300,8 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
     <div>
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h2 className="text-lg font-semibold text-stone-800">Expenses</h2>
-          <p className="text-sm text-stone-500">{expenses.length} entries · {formatCurrency(total, trip.currency)}</p>
+          <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">Expenses</h2>
+          <p className="text-sm text-stone-500 dark:text-stone-400">{expenses.length} entries · {formatCurrency(total, trip.currency)}</p>
         </div>
         <Button variant="primary" onClick={() => setAddOpen(true)}><Plus className="h-4 w-4" /> Add Expense</Button>
       </div>
@@ -313,7 +313,7 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
             return (
               <div
                 key={cat}
-                className="rounded-xl border border-stone-100 bg-white p-3"
+                className="rounded-xl border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 p-3"
                 style={{ borderLeft: `3px solid ${c.color}` }}
               >
                 <div
@@ -322,8 +322,8 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
                 >
                   {c.emoji}
                 </div>
-                <div className="mb-0.5 text-xs text-stone-500">{c.label}</div>
-                <div className="text-sm font-semibold text-stone-800">{formatCurrency(amt, trip.currency)}</div>
+                <div className="mb-0.5 text-xs text-stone-500 dark:text-stone-400">{c.label}</div>
+                <div className="text-sm font-semibold text-stone-800 dark:text-stone-100">{formatCurrency(amt, trip.currency)}</div>
               </div>
             );
           })}
@@ -331,26 +331,26 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
       )}
 
       {hasSplit && (
-        <div className="mb-6 rounded-2xl border border-stone-100 bg-white p-4">
+        <div className="mb-6 rounded-2xl border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 p-4">
           <div className="mb-3 flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-600">
               <Scale className="h-4 w-4" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-stone-800">Settle up</h3>
-              <p className="text-xs text-stone-400">Based on split expenses · in {trip.currency}</p>
+              <h3 className="text-sm font-semibold text-stone-800 dark:text-stone-100">Settle up</h3>
+              <p className="text-xs text-stone-400 dark:text-stone-500">Based on split expenses · in {trip.currency}</p>
             </div>
           </div>
 
           {settlement.transactions.length === 0 ? (
-            <p className="rounded-xl bg-stone-50 px-3 py-3 text-sm text-stone-500">All settled up 🎉</p>
+            <p className="rounded-xl bg-stone-50 dark:bg-stone-800/60 px-3 py-3 text-sm text-stone-500 dark:text-stone-400">All settled up 🎉</p>
           ) : (
             <div className="space-y-2">
               {settlement.transactions.map((t, i) => (
-                <div key={i} className="flex items-center gap-2 rounded-xl bg-stone-50 px-3 py-2.5 text-sm">
-                  <span className="font-medium text-stone-800 truncate">{nameOf(t.from)}</span>
-                  <ArrowRight className="h-3.5 w-3.5 shrink-0 text-stone-400" />
-                  <span className="font-medium text-stone-800 truncate">{nameOf(t.to)}</span>
+                <div key={i} className="flex items-center gap-2 rounded-xl bg-stone-50 dark:bg-stone-800/60 px-3 py-2.5 text-sm">
+                  <span className="font-medium text-stone-800 dark:text-stone-100 truncate">{nameOf(t.from)}</span>
+                  <ArrowRight className="h-3.5 w-3.5 shrink-0 text-stone-400 dark:text-stone-500" />
+                  <span className="font-medium text-stone-800 dark:text-stone-100 truncate">{nameOf(t.to)}</span>
                   <span className="ml-auto shrink-0 font-semibold text-amber-600">{formatCurrency(t.amount, trip.currency)}</span>
                 </div>
               ))}
@@ -358,7 +358,7 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
           )}
 
           {nonZeroBalances.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1.5 border-t border-stone-100 pt-3">
+            <div className="mt-3 flex flex-wrap gap-1.5 border-t border-stone-100 dark:border-stone-800 pt-3">
               {nonZeroBalances
                 .sort((a, b) => b.net - a.net)
                 .map((b) => (
@@ -378,9 +378,9 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
       )}
 
       {expenses.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-stone-200 rounded-2xl">
+        <div className="text-center py-16 border-2 border-dashed border-stone-200 dark:border-stone-700 rounded-2xl">
           <div className="text-3xl mb-2">💴</div>
-          <p className="text-sm text-stone-500 font-medium">No expenses yet</p>
+          <p className="text-sm text-stone-500 dark:text-stone-400 font-medium">No expenses yet</p>
           <Button variant="primary" className="mt-4" onClick={() => setAddOpen(true)}><Plus className="h-4 w-4" /> Add Expense</Button>
         </div>
       ) : (
@@ -391,7 +391,7 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
             const split = expense.splitMode === "equal" && shareCount > 0;
             const perShare = split ? expense.amount / shareCount : 0;
             return (
-            <div key={expense.id} className="group flex items-center gap-3 bg-white border border-stone-100 rounded-xl px-4 py-3 hover:border-stone-200 transition-colors">
+            <div key={expense.id} className="group flex items-center gap-3 bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-xl px-4 py-3 hover:border-stone-200 transition-colors">
               <span
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg"
                 style={{ backgroundColor: `${c.color}1a` }}
@@ -399,17 +399,17 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
                 {c.emoji}
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-stone-800 truncate">{expense.title}</p>
-                <p className="text-xs text-stone-400 truncate">{formatDate(expense.date)} · {c.label}</p>
+                <p className="text-sm font-medium text-stone-800 dark:text-stone-100 truncate">{expense.title}</p>
+                <p className="text-xs text-stone-400 dark:text-stone-500 truncate">{formatDate(expense.date)} · {c.label}</p>
                 {(expense.paidByName || split) && (
                   <div className="mt-1 flex flex-wrap items-center gap-1.5">
                     {expense.paidByName && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2 py-0.5 text-[10px] font-medium text-stone-600">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-stone-100 dark:bg-stone-800 px-2 py-0.5 text-[10px] font-medium text-stone-600 dark:text-stone-300">
                         <Wallet className="h-2.5 w-2.5" /> {expense.paidByName}
                       </span>
                     )}
                     {split && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
                         <Users className="h-2.5 w-2.5" /> Split {shareCount} · {formatCurrency(perShare, expense.currency)} each
                       </span>
                     )}
@@ -417,7 +417,7 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
                 )}
               </div>
               <div className="text-right shrink-0">
-                <p className="text-sm font-semibold text-stone-800">{formatCurrency(expense.amount, expense.currency)}</p>
+                <p className="text-sm font-semibold text-stone-800 dark:text-stone-100">{formatCurrency(expense.amount, expense.currency)}</p>
               </div>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditExpense(expense)}><Pencil className="h-3 w-3" /></Button>
@@ -459,7 +459,7 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
 
       <Dialog open={!!deleteExpense} onOpenChange={(open) => !open && setDeleteExpense(null)}>
         <DialogContent className="max-w-sm"><DialogHeader><DialogTitle>Delete Expense</DialogTitle></DialogHeader>
-          <p className="text-sm text-stone-600 mb-4">Delete <strong>{deleteExpense?.title}</strong>?</p>
+          <p className="text-sm text-stone-600 dark:text-stone-300 mb-4">Delete <strong>{deleteExpense?.title}</strong>?</p>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => setDeleteExpense(null)} className="flex-1">Cancel</Button>
             <Button variant="destructive" onClick={handleDelete} className="flex-1">Delete</Button>

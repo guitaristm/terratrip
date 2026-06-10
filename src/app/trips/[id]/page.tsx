@@ -66,7 +66,7 @@ export default function TripDetailPage() {
 
   return (
     <div className="animate-fade-in-up">
-      <Link href="/trips" className="inline-flex items-center gap-1.5 text-sm text-stone-500 hover:text-stone-800 mb-5 transition-colors">
+      <Link href="/trips" className="inline-flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400 hover:text-stone-800 mb-5 transition-colors">
         <ArrowLeft className="h-4 w-4" /> Back to trips
       </Link>
 
@@ -102,10 +102,10 @@ export default function TripDetailPage() {
         </div>
       </div>
 
-      <div className="mb-6 flex w-full gap-1 overflow-x-auto rounded-xl bg-stone-100 p-1 sm:w-fit">
+      <div className="mb-6 flex w-full gap-1 overflow-x-auto rounded-xl bg-stone-100 dark:bg-stone-800 p-1 sm:w-fit">
         {tabs.map((tab) => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-            className={`flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all sm:flex-none ${activeTab === tab.id ? "bg-white text-stone-800 shadow-sm" : "text-stone-500 hover:text-stone-700"}`}>
+            className={`flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all sm:flex-none ${activeTab === tab.id ? "bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-100 shadow-sm" : "text-stone-500 dark:text-stone-400 hover:text-stone-700"}`}>
             {tab.icon} {tab.label}
           </button>
         ))}

@@ -91,8 +91,8 @@ export function TripManager() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-semibold text-stone-800">My Trips</h1>
-          <p className="text-sm text-stone-500 mt-0.5">{trips.length} trip{trips.length !== 1 ? "s" : ""} planned</p>
+          <h1 className="text-xl font-semibold text-stone-800 dark:text-stone-100">My Trips</h1>
+          <p className="text-sm text-stone-500 dark:text-stone-400 mt-0.5">{trips.length} trip{trips.length !== 1 ? "s" : ""} planned</p>
         </div>
         <Button variant="primary" onClick={() => setCreateOpen(true)}>
           <Plus className="h-4 w-4" /> New Trip
@@ -100,14 +100,14 @@ export function TripManager() {
       </div>
 
       <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400 dark:text-stone-500" />
         <Input placeholder="Search trips…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center py-20 text-stone-400">
+        <div className="text-center py-20 text-stone-400 dark:text-stone-500">
           <div className="text-4xl mb-3">✈️</div>
-          <p className="text-sm font-medium text-stone-500">No trips yet</p>
+          <p className="text-sm font-medium text-stone-500 dark:text-stone-400">No trips yet</p>
           <p className="text-xs mt-1">Create your first trip to get started</p>
           <Button variant="primary" className="mt-4" onClick={() => setCreateOpen(true)}>
             <Plus className="h-4 w-4" /> New Trip
@@ -140,7 +140,7 @@ export function TripManager() {
       <Dialog open={!!deleteTrip} onOpenChange={(open) => !open && setDeleteTrip(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader><DialogTitle>Delete Trip</DialogTitle></DialogHeader>
-          <p className="text-sm text-stone-600 mb-4">Delete <strong>{deleteTrip?.name}</strong>? This removes all itinerary and expenses.</p>
+          <p className="text-sm text-stone-600 dark:text-stone-300 mb-4">Delete <strong>{deleteTrip?.name}</strong>? This removes all itinerary and expenses.</p>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => setDeleteTrip(null)} className="flex-1">Cancel</Button>
             <Button variant="destructive" onClick={handleDelete} className="flex-1">Delete</Button>

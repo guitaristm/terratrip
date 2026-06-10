@@ -7,16 +7,16 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-stone-100 text-stone-800",
+        default: "bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-100",
         food: "bg-orange-100 text-orange-700",
         hotel: "bg-blue-100 text-blue-700",
         transport: "bg-purple-100 text-purple-700",
         shopping: "bg-pink-100 text-pink-700",
         tickets: "bg-green-100 text-green-700",
-        other: "bg-stone-100 text-stone-600",
-        owner: "bg-amber-100 text-amber-700",
+        other: "bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300",
+        owner: "bg-amber-100 text-amber-700 dark:text-amber-300",
         editor: "bg-blue-100 text-blue-700",
-        viewer: "bg-stone-100 text-stone-600",
+        viewer: "bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300",
       },
     },
     defaultVariants: { variant: "default" },

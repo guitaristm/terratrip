@@ -39,10 +39,10 @@ export function SpendingChart({ expenses, currency }: SpendingChartProps) {
 
   if (expenses.length === 0) {
     return (
-      <div className="bg-white border border-stone-100 rounded-2xl p-6 text-center py-16">
+      <div className="bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-2xl p-6 text-center py-16">
         <div className="text-3xl mb-2">📊</div>
-        <p className="text-sm text-stone-500">No expense data yet</p>
-        <p className="text-xs text-stone-400 mt-1">Add expenses to see your spending charts</p>
+        <p className="text-sm text-stone-500 dark:text-stone-400">No expense data yet</p>
+        <p className="text-xs text-stone-400 dark:text-stone-500 mt-1">Add expenses to see your spending charts</p>
       </div>
     );
   }
@@ -50,8 +50,8 @@ export function SpendingChart({ expenses, currency }: SpendingChartProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {/* Bar chart — daily spending */}
-      <div className="bg-white border border-stone-100 rounded-2xl p-5">
-        <h3 className="text-sm font-semibold text-stone-700 mb-4">Daily Spending</h3>
+      <div className="bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-2xl p-5">
+        <h3 className="text-sm font-semibold text-stone-700 dark:text-stone-200 mb-4">Daily Spending</h3>
         {dailyData.length > 0 ? (
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={dailyData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
@@ -65,13 +65,13 @@ export function SpendingChart({ expenses, currency }: SpendingChartProps) {
             </BarChart>
           </ResponsiveContainer>
         ) : (
-          <div className="h-[200px] flex items-center justify-center text-stone-400 text-sm">No data</div>
+          <div className="h-[200px] flex items-center justify-center text-stone-400 dark:text-stone-500 text-sm">No data</div>
         )}
       </div>
 
       {/* Pie chart — by category */}
-      <div className="bg-white border border-stone-100 rounded-2xl p-5">
-        <h3 className="text-sm font-semibold text-stone-700 mb-4">By Category</h3>
+      <div className="bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-2xl p-5">
+        <h3 className="text-sm font-semibold text-stone-700 dark:text-stone-200 mb-4">By Category</h3>
         {categoryData.length > 0 ? (
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
@@ -100,7 +100,7 @@ export function SpendingChart({ expenses, currency }: SpendingChartProps) {
             </PieChart>
           </ResponsiveContainer>
         ) : (
-          <div className="h-[200px] flex items-center justify-center text-stone-400 text-sm">No data</div>
+          <div className="h-[200px] flex items-center justify-center text-stone-400 dark:text-stone-500 text-sm">No data</div>
         )}
       </div>
     </div>

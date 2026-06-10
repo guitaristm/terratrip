@@ -89,31 +89,31 @@ function SortableItem({
       <button
         {...attributes}
         {...listeners}
-        className="flex w-5 shrink-0 cursor-grab items-center justify-center rounded-md text-stone-300 transition-colors hover:bg-stone-100 hover:text-stone-500 active:cursor-grabbing"
+        className="flex w-5 shrink-0 cursor-grab items-center justify-center rounded-md text-stone-300 dark:text-stone-600 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-500 active:cursor-grabbing"
         aria-label="Drag activity"
       >
         <GripVertical className="h-4 w-4" />
       </button>
       <div
-        className="flex-1 rounded-xl border border-stone-100 bg-white px-3 py-2.5 shadow-sm transition-all hover:border-stone-200 hover:shadow"
+        className="flex-1 rounded-xl border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 px-3 py-2.5 shadow-sm transition-all hover:border-stone-200 hover:shadow"
         style={{ borderLeft: `3px solid ${cat.color}` }}
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex min-w-0 flex-1 items-center gap-2">
             {item.time && (
-              <span className="flex shrink-0 items-center gap-1 text-xs font-medium text-stone-400">
+              <span className="flex shrink-0 items-center gap-1 text-xs font-medium text-stone-400 dark:text-stone-500">
                 <Clock className="h-3 w-3" />
                 {item.time}
               </span>
             )}
-            <span className="truncate text-sm font-medium text-stone-800">
+            <span className="truncate text-sm font-medium text-stone-800 dark:text-stone-100">
               <span className="mr-1">{cat.emoji}</span>
               {item.title}
             </span>
           </div>
           <div className="flex shrink-0 items-center gap-1.5">
             {item.amount != null && item.amount > 0 && (
-              <span className="text-xs font-semibold text-stone-600">{formatCurrency(item.amount, item.currency)}</span>
+              <span className="text-xs font-semibold text-stone-600 dark:text-stone-300">{formatCurrency(item.amount, item.currency)}</span>
             )}
             <div className="flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
               <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => onEdit(item)}>
@@ -154,12 +154,12 @@ function SortableItem({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-1.5 py-0.5 text-[10px] font-medium text-stone-600 hover:bg-stone-200"
+              className="inline-flex items-center gap-1 rounded-full bg-stone-100 dark:bg-stone-800 px-1.5 py-0.5 text-[10px] font-medium text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700"
             >
               <LinkIcon className="h-2.5 w-2.5" /> Link
             </a>
           )}
-          {item.notes && <p className="truncate text-xs text-stone-400">{item.notes}</p>}
+          {item.notes && <p className="truncate text-xs text-stone-400 dark:text-stone-500">{item.notes}</p>}
         </div>
       </div>
     </div>
@@ -263,13 +263,13 @@ function DaySection({
     <div
       ref={setNodeRef}
       style={style}
-      className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-shadow"
+      className="overflow-hidden rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 shadow-sm transition-shadow"
     >
-      <div className="flex items-center gap-2 bg-gradient-to-r from-stone-50 to-white px-3 py-3">
+      <div className="flex items-center gap-2 bg-gradient-to-r from-stone-50 to-white dark:from-stone-800/60 dark:to-stone-900 px-3 py-3">
         <button
           {...attributes}
           {...listeners}
-          className="flex h-8 w-7 shrink-0 cursor-grab items-center justify-center rounded-lg text-stone-300 transition-colors hover:bg-stone-100 hover:text-stone-500 active:cursor-grabbing"
+          className="flex h-8 w-7 shrink-0 cursor-grab items-center justify-center rounded-lg text-stone-300 dark:text-stone-600 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-500 active:cursor-grabbing"
           aria-label="Drag day"
         >
           <GripVertical className="h-4 w-4" />
@@ -284,8 +284,8 @@ function DaySection({
         </div>
 
         <button className="min-w-0 flex-1 text-left" onClick={() => setCollapsed((c) => !c)}>
-          <h3 className="truncate text-sm font-semibold text-stone-800">Day {index + 1}</h3>
-          <p className="truncate text-xs text-stone-400">
+          <h3 className="truncate text-sm font-semibold text-stone-800 dark:text-stone-100">Day {index + 1}</h3>
+          <p className="truncate text-xs text-stone-400 dark:text-stone-500">
             {dayMonth(day.date)} · {items.length} {items.length === 1 ? "activity" : "activities"}
             {dayTotal > 0 && <> · {formatCurrency(dayTotal, trip.currency)}</>}
           </p>
@@ -295,7 +295,7 @@ function DaySection({
           <Button
             size="icon"
             variant="ghost"
-            className="h-8 w-8 text-stone-400 hover:text-amber-600"
+            className="h-8 w-8 text-stone-400 dark:text-stone-500 hover:text-amber-600"
             onClick={() => setAddOpen(true)}
             aria-label="Add activity"
           >
@@ -304,7 +304,7 @@ function DaySection({
           <Button
             size="icon"
             variant="ghost"
-            className="h-8 w-8 text-stone-400 hover:bg-red-50 hover:text-red-500"
+            className="h-8 w-8 text-stone-400 dark:text-stone-500 hover:bg-red-50 hover:text-red-500"
             onClick={() => onDeleteDay(day)}
             aria-label="Delete day"
           >
@@ -312,7 +312,7 @@ function DaySection({
           </Button>
           <button
             onClick={() => setCollapsed((c) => !c)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-400 transition-colors hover:bg-stone-100"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-400 dark:text-stone-500 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800"
             aria-label={collapsed ? "Expand" : "Collapse"}
           >
             <ChevronDown className={`h-4 w-4 transition-transform ${collapsed ? "-rotate-90" : ""}`} />
@@ -321,11 +321,11 @@ function DaySection({
       </div>
 
       {!collapsed && (
-        <div className="space-y-2 border-t border-stone-100 bg-stone-50/40 p-3">
+        <div className="space-y-2 border-t border-stone-100 dark:border-stone-800 bg-stone-50/40 dark:bg-stone-900/40 p-3">
           {items.length === 0 ? (
             <button
               onClick={() => setAddOpen(true)}
-              className="w-full rounded-xl border-2 border-dashed border-stone-200 py-4 text-xs text-stone-400 transition-colors hover:border-amber-300 hover:text-amber-500"
+              className="w-full rounded-xl border-2 border-dashed border-stone-200 dark:border-stone-700 py-4 text-xs text-stone-400 dark:text-stone-500 transition-colors hover:border-amber-300 hover:text-amber-500"
             >
               + Add first activity
             </button>
@@ -381,7 +381,7 @@ function DaySection({
           <DialogHeader>
             <DialogTitle>Delete Activity</DialogTitle>
           </DialogHeader>
-          <p className="mb-4 text-sm text-stone-600">
+          <p className="mb-4 text-sm text-stone-600 dark:text-stone-300">
             Delete <strong>{deleteItem?.title}</strong>?
           </p>
           <div className="flex gap-2">
@@ -573,12 +573,12 @@ export function ItineraryView({ trip, onTripChange }: { trip: Trip; onTripChange
     <div>
       <div className="mb-5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600">
             <CalendarDays className="h-4.5 w-4.5" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-stone-800">Itinerary</h2>
-            <p className="text-xs text-stone-500">{days.length} day{days.length !== 1 ? "s" : ""} · drag to reorder</p>
+            <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">Itinerary</h2>
+            <p className="text-xs text-stone-500 dark:text-stone-400">{days.length} day{days.length !== 1 ? "s" : ""} · drag to reorder</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -611,7 +611,7 @@ export function ItineraryView({ trip, onTripChange }: { trip: Trip; onTripChange
       <button
         onClick={handleAddDay}
         disabled={busy}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-stone-200 py-4 text-sm font-medium text-stone-500 transition-colors hover:border-amber-300 hover:bg-amber-50/40 hover:text-amber-600 disabled:opacity-50"
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-stone-200 dark:border-stone-700 py-4 text-sm font-medium text-stone-500 dark:text-stone-400 transition-colors hover:border-amber-300 hover:bg-amber-50/40 hover:text-amber-600 disabled:opacity-50"
       >
         <CalendarPlus className="h-4 w-4" />
         Add Day
@@ -622,7 +622,7 @@ export function ItineraryView({ trip, onTripChange }: { trip: Trip; onTripChange
           <DialogHeader>
             <DialogTitle>Delete Day</DialogTitle>
           </DialogHeader>
-          <p className="mb-4 text-sm text-stone-600">
+          <p className="mb-4 text-sm text-stone-600 dark:text-stone-300">
             Remove this day and all its items? Remaining days will be renumbered and the trip length updated.
           </p>
           <div className="flex gap-2">

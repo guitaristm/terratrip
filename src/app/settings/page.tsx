@@ -11,14 +11,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/toast";
 import { useIdentity } from "@/lib/identity";
+import { applyTheme } from "@/lib/theme";
 import { User, Palette, Bell, Globe } from "lucide-react";
 
 function Section({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white border border-stone-100 rounded-2xl p-6">
-      <div className="flex items-center gap-2 mb-5 pb-4 border-b border-stone-100">
-        <div className="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center text-amber-600">{icon}</div>
-        <h2 className="text-sm font-semibold text-stone-800">{title}</h2>
+    <div className="bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-2xl p-6">
+      <div className="flex items-center gap-2 mb-5 pb-4 border-b border-stone-100 dark:border-stone-800">
+        <div className="w-8 h-8 bg-amber-50 dark:bg-amber-950/40 rounded-lg flex items-center justify-center text-amber-600">{icon}</div>
+        <h2 className="text-sm font-semibold text-stone-800 dark:text-stone-100">{title}</h2>
       </div>
       {children}
     </div>
@@ -62,8 +63,8 @@ export default function SettingsPage() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-stone-800">Settings</h1>
-        <p className="text-sm text-stone-500 mt-1">Manage your account preferences</p>
+        <h1 className="text-xl font-bold text-stone-800 dark:text-stone-100">Settings</h1>
+        <p className="text-sm text-stone-500 dark:text-stone-400 mt-1">Manage your account preferences</p>
       </div>
       <div className="space-y-4">
         <Section icon={<User className="h-4 w-4" />} title="Profile">
@@ -93,7 +94,7 @@ export default function SettingsPage() {
         <Section icon={<Palette className="h-4 w-4" />} title="Appearance">
           <div className="space-y-1.5">
             <Label>Theme</Label>
-            <Select value={theme} onValueChange={(v) => setValue("theme", v as SettingsFormValues["theme"])}>
+            <Select value={theme} onValueChange={(v) => { setValue("theme", v as SettingsFormValues["theme"]); applyTheme(v); }}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="light">☀️ Light</SelectItem>
@@ -106,8 +107,8 @@ export default function SettingsPage() {
         <Section icon={<Bell className="h-4 w-4" />} title="Notifications">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-stone-800">Trip reminders</p>
-              <p className="text-xs text-stone-400 mt-0.5">Get notified before your trips</p>
+              <p className="text-sm font-medium text-stone-800 dark:text-stone-100">Trip reminders</p>
+              <p className="text-xs text-stone-400 dark:text-stone-500 mt-0.5">Get notified before your trips</p>
             </div>
             <Switch checked={notifications} onCheckedChange={(v) => setValue("notifications", v)} />
           </div>

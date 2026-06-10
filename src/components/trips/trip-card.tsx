@@ -28,7 +28,7 @@ export function TripCard({ trip, onEdit, onDelete }: TripCardProps) {
   const flag = COUNTRY_EMOJIS[trip.country] ?? "🌍";
 
   return (
-    <div className="group bg-white border border-stone-200 rounded-2xl overflow-hidden hover:shadow-md hover:border-stone-300 transition-all duration-200">
+    <div className="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-2xl overflow-hidden hover:shadow-md hover:border-stone-300 transition-all duration-200">
       {/* Color band */}
       <div className="h-1.5 bg-gradient-to-r from-amber-400 to-amber-600" />
 
@@ -37,8 +37,8 @@ export function TripCard({ trip, onEdit, onDelete }: TripCardProps) {
           <div className="flex items-center gap-2.5">
             <span className="text-2xl">{flag}</span>
             <div>
-              <h3 className="font-semibold text-stone-800 text-sm leading-tight">{trip.name}</h3>
-              <p className="text-xs text-stone-400 flex items-center gap-1 mt-0.5">
+              <h3 className="font-semibold text-stone-800 dark:text-stone-100 text-sm leading-tight">{trip.name}</h3>
+              <p className="text-xs text-stone-400 dark:text-stone-500 flex items-center gap-1 mt-0.5">
                 <MapPin className="h-3 w-3" /> {trip.country}
               </p>
             </div>
@@ -54,18 +54,18 @@ export function TripCard({ trip, onEdit, onDelete }: TripCardProps) {
         </div>
 
         <div className="space-y-2 mb-4">
-          <div className="flex items-center gap-1.5 text-xs text-stone-500">
-            <Calendar className="h-3.5 w-3.5 text-stone-400" />
+          <div className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-400">
+            <Calendar className="h-3.5 w-3.5 text-stone-400 dark:text-stone-500" />
             {formatDate(trip.startDate)} → {formatDate(trip.endDate)}
-            <span className="ml-auto text-stone-400">{days}d</span>
+            <span className="ml-auto text-stone-400 dark:text-stone-500">{days}d</span>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-stone-500">
-            <DollarSign className="h-3.5 w-3.5 text-stone-400" />
-            Budget: <span className="font-medium text-stone-700">{formatCurrency(trip.budget, trip.currency)}</span>
+          <div className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-400">
+            <DollarSign className="h-3.5 w-3.5 text-stone-400 dark:text-stone-500" />
+            Budget: <span className="font-medium text-stone-700 dark:text-stone-200">{formatCurrency(trip.budget, trip.currency)}</span>
           </div>
           {(trip._count?.days ?? 0) > 0 && (
-            <div className="flex items-center gap-1.5 text-xs text-stone-500">
-              <Users className="h-3.5 w-3.5 text-stone-400" />
+            <div className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-400">
+              <Users className="h-3.5 w-3.5 text-stone-400 dark:text-stone-500" />
               {trip._count?.days} days · {trip._count?.expenses} expenses
             </div>
           )}
@@ -73,7 +73,7 @@ export function TripCard({ trip, onEdit, onDelete }: TripCardProps) {
 
         <Link
           href={`/trips/${trip.id}`}
-          className="block w-full text-center py-2 rounded-xl bg-stone-50 hover:bg-amber-50 hover:text-amber-700 text-xs font-medium text-stone-600 transition-colors border border-stone-100 hover:border-amber-200"
+          className="block w-full text-center py-2 rounded-xl bg-stone-50 dark:bg-stone-800/60 hover:bg-amber-50 hover:text-amber-700 text-xs font-medium text-stone-600 dark:text-stone-300 transition-colors border border-stone-100 dark:border-stone-800 hover:border-amber-200"
         >
           Open Trip →
         </Link>

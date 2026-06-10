@@ -59,11 +59,11 @@ export function StatsCards({ trips, expenses, currency }: StatsCardsProps) {
         return (
           <div
             key={card.label}
-            className="animate-fade-in-up rounded-2xl border border-stone-100 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+            className="animate-fade-in-up rounded-2xl border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
             style={{ animationDelay: `${i * 60}ms` }}
           >
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-xs font-medium text-stone-500">{card.label}</span>
+              <span className="text-xs font-medium text-stone-500 dark:text-stone-400">{card.label}</span>
               <div
                 className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-sm"
                 style={{ background: card.gradient }}
@@ -71,8 +71,8 @@ export function StatsCards({ trips, expenses, currency }: StatsCardsProps) {
                 <Icon className="h-4 w-4" />
               </div>
             </div>
-            <p className="truncate text-lg font-bold text-stone-800">{card.value}</p>
-            <p className="mt-0.5 text-xs text-stone-400">{card.sub}</p>
+            <p className="truncate text-lg font-bold text-stone-800 dark:text-stone-100">{card.value}</p>
+            <p className="mt-0.5 text-xs text-stone-400 dark:text-stone-500">{card.sub}</p>
           </div>
         );
       })}

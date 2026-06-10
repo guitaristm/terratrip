@@ -68,7 +68,7 @@ export function CategoryField({
               </span>
             </SelectItem>
           ))}
-          <SelectItem value={NEW_SENTINEL} className="mt-1 border-t border-stone-100 pt-2 font-medium text-amber-600">
+          <SelectItem value={NEW_SENTINEL} className="mt-1 border-t border-stone-100 dark:border-stone-800 pt-2 font-medium text-amber-600">
             <span className="flex items-center gap-2">
               <Plus className="h-3.5 w-3.5" /> New Category
             </span>
