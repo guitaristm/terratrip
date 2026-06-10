@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CollaboratorSchema, type CollaboratorFormValues } from "@/lib/schemas";
-import { Crown, Pencil, Eye, Trash2, UserPlus, Mail } from "lucide-react";
+import { Crown, Pencil, Eye, Trash2, UserPlus, Mail, Link2, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,6 +19,7 @@ export function CollaboratorPanel({ trip }: { trip: Trip }) {
   const [loading, setLoading] = useState(true);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<CollaboratorFormValues>({
@@ -60,6 +61,20 @@ export function CollaboratorPanel({ trip }: { trip: Trip }) {
       await refresh();
       toast("Role updated.");
     } catch { toast("Failed to update role", "error"); }
+  }
+
+  const inviteLink =
+    typeof window !== "undefined" ? `${window.location.origin}/trips/${trip.id}/join?role=${role}` : "";
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      setCopied(true);
+      toast("Invite link copied!");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast("Couldn't copy link", "error");
+    }
   }
 
   async function handleRemove(memberId: string) {
@@ -127,12 +142,8 @@ export function CollaboratorPanel({ trip }: { trip: Trip }) {
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader><DialogTitle>Invite Collaborator</DialogTitle></DialogHeader>
-          <form onSubmit={handleSubmit(handleInvite)} className="space-y-4">
-            <div className="space-y-1.5">
-              <Label>Email address</Label>
-              <Input type="email" placeholder="friend@example.com" {...register("email")} />
-              {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
-            </div>
+
+          <div className="space-y-4">
             <div className="space-y-1.5">
               <Label>Role</Label>
               <Select value={role} onValueChange={(v) => setValue("role", v as CollaboratorFormValues["role"])}>
@@ -143,11 +154,36 @@ export function CollaboratorPanel({ trip }: { trip: Trip }) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => setInviteOpen(false)} className="flex-1">Cancel</Button>
-              <Button type="submit" variant="primary" disabled={isLoading} className="flex-1">{isLoading ? "Sending…" : "Send Invite"}</Button>
+
+            {/* Shareable link — works for anyone, no email needed */}
+            <div className="space-y-1.5">
+              <Label className="flex items-center gap-1.5"><Link2 className="h-3.5 w-3.5" /> Shareable link</Label>
+              <div className="flex gap-2">
+                <Input readOnly value={inviteLink} onFocus={(e) => e.currentTarget.select()} className="text-xs text-stone-500" />
+                <Button type="button" variant="outline" onClick={copyLink} className="shrink-0 px-3">
+                  {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </div>
+              <p className="text-[11px] text-stone-400">Anyone with this link can join as <strong>{role}</strong>. Send it via any app.</p>
             </div>
-          </form>
+
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-stone-100" />
+              <span className="text-[11px] font-medium text-stone-400">or invite by email</span>
+              <div className="h-px flex-1 bg-stone-100" />
+            </div>
+
+            <form onSubmit={handleSubmit(handleInvite)} className="space-y-3">
+              <div className="space-y-1.5">
+                <Label>Email address</Label>
+                <Input type="email" placeholder="friend@example.com" {...register("email")} />
+                {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
+              </div>
+              <Button type="submit" variant="primary" disabled={isLoading} className="w-full">
+                {isLoading ? "Sending…" : "Send email invite"}
+              </Button>
+            </form>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

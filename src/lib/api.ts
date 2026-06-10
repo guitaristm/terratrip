@@ -22,6 +22,7 @@ export const api = {
     create: (data: any) => req<any>("/api/trips", { method: "POST", body: JSON.stringify(data) }),
     update: (id: string, data: any) => req<any>(`/api/trips/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
     delete: (id: string) => req<any>(`/api/trips/${id}`, { method: "DELETE" }),
+    join: (id: string, role: string) => req<any>(`/api/trips/${id}/join`, { method: "POST", body: JSON.stringify({ role }) }),
   },
 
   // ── Days ──────────────────────────────────────────────────

@@ -37,6 +37,10 @@ export async function POST(req: NextRequest) {
         date: new Date(parsed.data.date),
         baseCurrency: body.baseCurrency ?? parsed.data.currency,
         baseAmount: body.baseAmount ?? null,
+        paidById: parsed.data.paidById ?? null,
+        paidByName: parsed.data.paidByName ?? null,
+        splitMode: parsed.data.splitMode ?? "none",
+        splitWith: parsed.data.splitWith ?? [],
       },
     });
     return NextResponse.json(expense, { status: 201 });

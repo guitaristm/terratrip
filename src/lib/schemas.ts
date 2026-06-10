@@ -29,6 +29,10 @@ export const ExpenseSchema = z.object({
   currency: z.enum(["THB", "JPY", "USD"]),
   category: z.string().min(1).max(60),
   date: z.string().min(1, "Date is required"),
+  paidById: z.string().nullable().optional(),
+  paidByName: z.string().nullable().optional(),
+  splitMode: z.enum(["none", "equal"]).optional(),
+  splitWith: z.array(z.string()).optional(),
 });
 
 export type ExpenseFormValues = z.infer<typeof ExpenseSchema>;

@@ -73,6 +73,10 @@ export interface Expense {
   baseCurrency: string;
   category: string;
   date: Date;
+  paidById?: string | null;
+  paidByName?: string | null;
+  splitMode?: string; // none | equal
+  splitWith?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
