@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Map, LayoutDashboard, Settings, Plus, Globe, Menu, X } from "lucide-react";
+import { Map, LayoutDashboard, Settings, Plus, Globe, Menu, X, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useIdentity } from "@/lib/identity";
 
 const navItems = [
   { href: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -12,6 +13,9 @@ const navItems = [
 ];
 
 function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+  const { user, signOut } = useIdentity();
+  const displayName = user?.name?.trim() || "Guest";
+  const initial = (displayName[0] ?? "G").toUpperCase();
   return (
     <>
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-stone-100">
@@ -56,13 +60,25 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
 
       <div className="px-4 py-3 border-t border-stone-100">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-xs font-semibold text-stone-600">
-            D
+          <div
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white"
+            style={{ background: "linear-gradient(135deg,#f59e0b,#d97706)" }}
+          >
+            {initial}
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-stone-700 truncate">Demo User</p>
-            <p className="text-xs text-stone-400 truncate">demo@terratrip.app</p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-medium text-stone-700">{displayName}</p>
+            <p className="truncate text-xs text-stone-400">{user?.email ?? "Not signed in"}</p>
           </div>
+          {user && (
+            <button
+              onClick={() => signOut()}
+              title="Sign out"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-600"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
       </div>
     </>

@@ -69,5 +69,8 @@ export const api = {
   user: {
     get: () => req<any>("/api/users/me"),
     update: (data: any) => req<any>("/api/users/me", { method: "PATCH", body: JSON.stringify(data) }),
+    identify: (data: { name: string; email: string }) =>
+      req<any>("/api/users/identify", { method: "POST", body: JSON.stringify(data) }),
+    signOut: () => req<any>("/api/users/identify", { method: "DELETE" }),
   },
 };

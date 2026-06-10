@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/toast";
+import { useIdentity } from "@/lib/identity";
 import { User, Palette, Bell, Globe } from "lucide-react";
 
 function Section({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
@@ -26,6 +27,7 @@ function Section({ icon, title, children }: { icon: React.ReactNode; title: stri
 
 export default function SettingsPage() {
   const { toast } = useToast();
+  const { setUser } = useIdentity();
   const { register, handleSubmit, setValue, watch, reset, formState: { errors, isSubmitting } } = useForm<SettingsFormValues>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: { name: "", currency: "THB", theme: "light", notifications: true },
@@ -36,19 +38,21 @@ export default function SettingsPage() {
   const notifications = watch("notifications");
 
   useEffect(() => {
-    api.user.get().then((user) => {
+    api.user.get().then((u) => {
+      if (!u) return;
       reset({
-        name: user.name ?? "",
-        currency: user.currency ?? "THB",
-        theme: user.theme ?? "light",
-        notifications: user.notifications ?? true,
+        name: u.name ?? "",
+        currency: u.currency ?? "THB",
+        theme: u.theme ?? "light",
+        notifications: u.notifications ?? true,
       });
     }).catch(() => {});
   }, [reset]);
 
   async function onSubmit(data: SettingsFormValues) {
     try {
-      await api.user.update(data);
+      const updated = await api.user.update(data);
+      if (updated?.id) setUser(updated);
       toast("Settings saved!");
     } catch {
       toast("Failed to save settings", "error");

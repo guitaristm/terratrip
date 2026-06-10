@@ -4,6 +4,7 @@ import "./globals.css";
 import { Sidebar } from "@/components/layout/sidebar";
 import { ToastProvider } from "@/components/ui/toast";
 import { CategoryProvider } from "@/lib/categories";
+import { IdentityProvider } from "@/lib/identity";
 
 
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <ToastProvider>
+          <IdentityProvider>
           <CategoryProvider>
             <div className="flex min-h-screen">
               <Sidebar />
@@ -27,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </main>
             </div>
           </CategoryProvider>
+          </IdentityProvider>
         </ToastProvider>
       </body>
     </html>

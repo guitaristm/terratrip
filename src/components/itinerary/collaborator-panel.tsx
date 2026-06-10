@@ -40,11 +40,15 @@ export function CollaboratorPanel({ trip }: { trip: Trip }) {
   async function handleInvite(data: CollaboratorFormValues) {
     setIsLoading(true);
     try {
-      await api.collaborators.invite(trip.id, data);
+      const res = await api.collaborators.invite(trip.id, data);
       await refresh();
       reset();
       setInviteOpen(false);
-      toast(`Invite sent to ${data.email}`);
+      if (res?.emailSent) {
+        toast(`Invite emailed to ${data.email}`);
+      } else {
+        toast(`${data.email} added (pending) — email not sent`);
+      }
     } catch (e: any) {
       toast(e.message ?? "Failed to invite", "error");
     } finally { setIsLoading(false); }
