@@ -6,16 +6,18 @@ export interface Category {
   label: string;
   emoji: string;
   color: string; // hex
+  spending?: boolean; // does this category involve money? controls the amount field
   builtin?: boolean;
 }
 
 export const BUILTIN_CATEGORIES: Category[] = [
-  { key: "food", label: "Food", emoji: "🍜", color: "#f97316", builtin: true },
-  { key: "hotel", label: "Hotel", emoji: "🏨", color: "#6366f1", builtin: true },
-  { key: "transport", label: "Transport", emoji: "🚃", color: "#0ea5e9", builtin: true },
-  { key: "shopping", label: "Shopping", emoji: "🛍", color: "#ec4899", builtin: true },
-  { key: "tickets", label: "Tickets", emoji: "🎟", color: "#8b5cf6", builtin: true },
-  { key: "other", label: "Other", emoji: "📌", color: "#78716c", builtin: true },
+  { key: "food", label: "Food", emoji: "🍜", color: "#f97316", spending: true, builtin: true },
+  { key: "hotel", label: "Hotel", emoji: "🏨", color: "#6366f1", spending: true, builtin: true },
+  { key: "transport", label: "Transport", emoji: "🚃", color: "#0ea5e9", spending: true, builtin: true },
+  { key: "shopping", label: "Shopping", emoji: "🛍", color: "#ec4899", spending: true, builtin: true },
+  { key: "tickets", label: "Tickets", emoji: "🎟", color: "#8b5cf6", spending: true, builtin: true },
+  { key: "sightseeing", label: "Sightseeing", emoji: "📷", color: "#14b8a6", spending: false, builtin: true },
+  { key: "other", label: "Other", emoji: "📌", color: "#78716c", spending: false, builtin: true },
 ];
 
 export const CATEGORY_COLORS = [
@@ -91,6 +93,7 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
           label: key.replace(/^cat-/, "").replace(/-[a-z0-9]{4}$/, "").replace(/-/g, " ") || "Other",
           emoji: "📌",
           color: "#78716c",
+          spending: true,
         }
       );
     },
@@ -115,6 +118,7 @@ export function CategoryProvider({ children }: { children: React.ReactNode }) {
         label: trimmed,
         emoji: opts?.emoji ?? "📌",
         color: opts?.color ?? "#78716c",
+        spending: true,
       };
       setCustom((prev) => [...prev, cat]);
       return cat;

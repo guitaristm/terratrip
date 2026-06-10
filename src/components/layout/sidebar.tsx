@@ -68,7 +68,7 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-medium text-stone-700">{displayName}</p>
-            <p className="truncate text-xs text-stone-400">{user?.email ?? "Not signed in"}</p>
+            <p className="truncate text-xs text-stone-400">{user ? "On this device" : "Not signed in"}</p>
           </div>
           {user && (
             <button

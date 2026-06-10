@@ -4,11 +4,16 @@ import { api } from "@/lib/api";
 
 export interface Identity {
   id: string;
-  email: string;
+  email?: string | null;
   name: string;
   currency?: string;
   theme?: string;
   notifications?: boolean;
+}
+
+interface NameMatch {
+  id: string;
+  name: string;
 }
 
 interface IdentityContextValue {
@@ -60,25 +65,33 @@ export function useIdentity() {
 // ── Welcome / identity gate ───────────────────────────────────────────
 function IdentityGate({ onDone }: { onDone: (u: Identity) => void }) {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [matches, setMatches] = useState<NameMatch[] | null>(null);
 
-  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-  const canSubmit = name.trim().length > 0 && validEmail && !submitting;
+  const canSubmit = name.trim().length > 0 && !submitting;
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!canSubmit) return;
+  async function continueWith(payload: { name: string; confirmUserId?: string; createNew?: boolean }) {
     setSubmitting(true);
     setError(null);
     try {
-      const u = await api.user.identify({ name: name.trim(), email: email.trim().toLowerCase() });
-      onDone(u);
+      const res = await api.user.identify(payload);
+      if (res?.matches) {
+        setMatches(res.matches as NameMatch[]);
+        setSubmitting(false);
+        return;
+      }
+      onDone(res);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setSubmitting(false);
     }
+  }
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!canSubmit) return;
+    continueWith({ name: name.trim() });
   }
 
   return (
@@ -90,47 +103,66 @@ function IdentityGate({ onDone }: { onDone: (u: Identity) => void }) {
         >
           <span className="text-2xl">🗺️</span>
         </div>
-        <h1 className="text-center text-lg font-bold text-stone-800">Welcome to TerraTrip</h1>
-        <p className="mt-1 mb-5 text-center text-sm text-stone-500">
-          Tell us who you are so we can personalize your trips.
-        </p>
 
-        <form onSubmit={submit} className="space-y-3">
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-stone-600">Your name</label>
-            <input
-              autoFocus
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ex: Alex Tan"
-              className="h-11 w-full rounded-xl border border-stone-200 bg-white px-3 text-sm text-stone-800 outline-none transition-shadow placeholder:text-stone-400 focus:ring-2 focus:ring-amber-500"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-stone-600">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="h-11 w-full rounded-xl border border-stone-200 bg-white px-3 text-sm text-stone-800 outline-none transition-shadow placeholder:text-stone-400 focus:ring-2 focus:ring-amber-500"
-            />
-          </div>
-
-          {error && <p className="text-xs text-red-500">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={!canSubmit}
-            className="mt-1 flex h-11 w-full items-center justify-center rounded-xl bg-amber-600 text-sm font-semibold text-white transition-colors hover:bg-amber-700 disabled:opacity-50"
-          >
-            {submitting ? "Setting up…" : "Continue"}
-          </button>
-        </form>
-
-        <p className="mt-4 text-center text-[11px] text-stone-400">
-          No password needed — your name is saved on this device.
-        </p>
+        {!matches ? (
+          <>
+            <h1 className="text-center text-lg font-bold text-stone-800">Welcome to TerraTrip</h1>
+            <p className="mt-1 mb-5 text-center text-sm text-stone-500">
+              What&apos;s your name? We&apos;ll use it to personalize your trips.
+            </p>
+            <form onSubmit={submit} className="space-y-3">
+              <input
+                autoFocus
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ex: Alex Tan"
+                className="h-11 w-full rounded-xl border border-stone-200 bg-white px-3 text-sm text-stone-800 outline-none transition-shadow placeholder:text-stone-400 focus:ring-2 focus:ring-amber-500"
+              />
+              {error && <p className="text-xs text-red-500">{error}</p>}
+              <button
+                type="submit"
+                disabled={!canSubmit}
+                className="flex h-11 w-full items-center justify-center rounded-xl bg-amber-600 text-sm font-semibold text-white transition-colors hover:bg-amber-700 disabled:opacity-50"
+              >
+                {submitting ? "One sec…" : "Continue"}
+              </button>
+            </form>
+            <p className="mt-4 text-center text-[11px] text-stone-400">
+              No email or password — just your name, saved on this device.
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="text-center text-lg font-bold text-stone-800">Is this you?</h1>
+            <p className="mt-1 mb-5 text-center text-sm text-stone-500">
+              Someone named <strong>{name.trim()}</strong> is already here.
+            </p>
+            <div className="space-y-2">
+              <button
+                disabled={submitting}
+                onClick={() => continueWith({ name: name.trim(), confirmUserId: matches[0].id })}
+                className="flex h-11 w-full items-center justify-center rounded-xl bg-amber-600 text-sm font-semibold text-white transition-colors hover:bg-amber-700 disabled:opacity-50"
+              >
+                Yes, that&apos;s me
+              </button>
+              <button
+                disabled={submitting}
+                onClick={() => continueWith({ name: name.trim(), createNew: true })}
+                className="flex h-11 w-full items-center justify-center rounded-xl border border-stone-200 text-sm font-medium text-stone-600 transition-colors hover:bg-stone-50 disabled:opacity-50"
+              >
+                No, I&apos;m someone new
+              </button>
+              <button
+                disabled={submitting}
+                onClick={() => { setMatches(null); setError(null); }}
+                className="w-full pt-1 text-center text-xs text-stone-400 hover:text-stone-600"
+              >
+                ← Use a different name
+              </button>
+            </div>
+            {error && <p className="mt-3 text-center text-xs text-red-500">{error}</p>}
+          </>
+        )}
       </div>
     </div>
   );

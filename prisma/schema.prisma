@@ -10,7 +10,7 @@ datasource db {
 
 model User {
   id          String       @id @default(cuid())
-  email       String       @unique
+  email       String?      @unique
   name        String?
   avatarUrl   String?
   currency    String       @default("THB")
@@ -70,6 +70,8 @@ model ItineraryItem {
   category  String   @default("other")
   amount    Float?
   currency  String   @default("THB")
+  location  String?
+  link      String?
   order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

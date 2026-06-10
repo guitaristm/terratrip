@@ -26,6 +26,8 @@ import {
   ChevronDown,
   CalendarPlus,
   CalendarDays,
+  MapPin,
+  Link as LinkIcon,
 } from "lucide-react";
 import { api } from "@/lib/api";
 import type { ItineraryDay, ItineraryItem, Trip } from "@/lib/types";
@@ -49,6 +51,17 @@ function shortWeekday(date: Date | string): string {
 }
 function dayMonth(date: Date | string): string {
   return new Date(date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", timeZone: "UTC" });
+}
+
+// Turn a place name or pasted URL into a usable Google Maps link.
+function mapsHref(location: string): string {
+  const v = location.trim();
+  if (/^https?:\/\//i.test(v)) return v;
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v)}`;
+}
+function externalHref(url: string): string {
+  const v = url.trim();
+  return /^https?:\/\//i.test(v) ? v : `https://${v}`;
 }
 
 // ── single itinerary item ─────────────────────────────────────────────
@@ -77,7 +90,7 @@ function SortableItem({
         {...attributes}
         {...listeners}
         className="flex w-5 shrink-0 cursor-grab items-center justify-center rounded-md text-stone-300 transition-colors hover:bg-stone-100 hover:text-stone-500 active:cursor-grabbing"
-        aria-label="Drag item"
+        aria-label="Drag activity"
       >
         <GripVertical className="h-4 w-4" />
       </button>
@@ -117,13 +130,35 @@ function SortableItem({
             </div>
           </div>
         </div>
-        <div className="mt-1 flex items-center gap-2">
+        <div className="mt-1 flex flex-wrap items-center gap-2">
           <span
             className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium capitalize"
             style={{ backgroundColor: `${cat.color}1a`, color: cat.color }}
           >
             {cat.label}
           </span>
+          {item.location && (
+            <a
+              href={mapsHref(item.location)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-1.5 py-0.5 text-[10px] font-medium text-sky-600 hover:bg-sky-100"
+            >
+              <MapPin className="h-2.5 w-2.5" /> Maps
+            </a>
+          )}
+          {item.link && (
+            <a
+              href={externalHref(item.link)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-1.5 py-0.5 text-[10px] font-medium text-stone-600 hover:bg-stone-200"
+            >
+              <LinkIcon className="h-2.5 w-2.5" /> Link
+            </a>
+          )}
           {item.notes && <p className="truncate text-xs text-stone-400">{item.notes}</p>}
         </div>
       </div>
@@ -178,9 +213,9 @@ function DaySection({
       await api.items.create(day.id, { ...data, order: items.length });
       onRefresh();
       setAddOpen(false);
-      toast("Item added!");
+      toast("Activity added!");
     } catch {
-      toast("Failed to add item", "error");
+      toast("Failed to add activity", "error");
     } finally {
       setIsLoading(false);
     }
@@ -193,9 +228,9 @@ function DaySection({
       await api.items.update(day.id, editItem.id, data);
       onRefresh();
       setEditItem(null);
-      toast("Item updated!");
+      toast("Activity updated!");
     } catch {
-      toast("Failed to update item", "error");
+      toast("Failed to update activity", "error");
     } finally {
       setIsLoading(false);
     }
@@ -207,9 +242,9 @@ function DaySection({
       await api.items.delete(day.id, deleteItem.id);
       onRefresh();
       setDeleteItem(null);
-      toast("Item deleted.");
+      toast("Activity deleted.");
     } catch {
-      toast("Failed to delete item", "error");
+      toast("Failed to delete activity", "error");
     }
   }
 
@@ -251,7 +286,7 @@ function DaySection({
         <button className="min-w-0 flex-1 text-left" onClick={() => setCollapsed((c) => !c)}>
           <h3 className="truncate text-sm font-semibold text-stone-800">Day {index + 1}</h3>
           <p className="truncate text-xs text-stone-400">
-            {dayMonth(day.date)} · {items.length} item{items.length !== 1 ? "s" : ""}
+            {dayMonth(day.date)} · {items.length} {items.length === 1 ? "activity" : "activities"}
             {dayTotal > 0 && <> · {formatCurrency(dayTotal, trip.currency)}</>}
           </p>
         </button>
@@ -262,7 +297,7 @@ function DaySection({
             variant="ghost"
             className="h-8 w-8 text-stone-400 hover:text-amber-600"
             onClick={() => setAddOpen(true)}
-            aria-label="Add item"
+            aria-label="Add activity"
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -292,7 +327,7 @@ function DaySection({
               onClick={() => setAddOpen(true)}
               className="w-full rounded-xl border-2 border-dashed border-stone-200 py-4 text-xs text-stone-400 transition-colors hover:border-amber-300 hover:text-amber-500"
             >
-              + Add first item
+              + Add first activity
             </button>
           ) : (
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleItemDragEnd}>
@@ -309,16 +344,16 @@ function DaySection({
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Item · Day {index + 1}</DialogTitle>
+            <DialogTitle>Add Activity · Day {index + 1}</DialogTitle>
           </DialogHeader>
-          <ItemForm onSubmit={handleAdd} onCancel={() => setAddOpen(false)} submitLabel="Add Item" isLoading={isLoading} />
+          <ItemForm onSubmit={handleAdd} onCancel={() => setAddOpen(false)} submitLabel="Add Activity" isLoading={isLoading} />
         </DialogContent>
       </Dialog>
 
       <Dialog open={!!editItem} onOpenChange={(open) => !open && setEditItem(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Item</DialogTitle>
+            <DialogTitle>Edit Activity</DialogTitle>
           </DialogHeader>
           {editItem && (
             <ItemForm
@@ -329,6 +364,8 @@ function DaySection({
                 category: editItem.category,
                 amount: editItem.amount ?? undefined,
                 currency: editItem.currency as ItineraryItemFormValues["currency"],
+                location: editItem.location ?? "",
+                link: editItem.link ?? "",
               }}
               onSubmit={handleEdit}
               onCancel={() => setEditItem(null)}
@@ -342,7 +379,7 @@ function DaySection({
       <Dialog open={!!deleteItem} onOpenChange={(open) => !open && setDeleteItem(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Delete Item</DialogTitle>
+            <DialogTitle>Delete Activity</DialogTitle>
           </DialogHeader>
           <p className="mb-4 text-sm text-stone-600">
             Delete <strong>{deleteItem?.title}</strong>?

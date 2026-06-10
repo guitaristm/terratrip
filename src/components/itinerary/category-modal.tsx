@@ -20,16 +20,18 @@ export function CategoryModal({
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState(CATEGORY_EMOJIS[0]);
   const [color, setColor] = useState(CATEGORY_COLORS[0]);
+  const [spending, setSpending] = useState(true);
 
   function reset() {
     setName("");
     setEmoji(CATEGORY_EMOJIS[0]);
     setColor(CATEGORY_COLORS[0]);
+    setSpending(true);
   }
 
   function handleCreate() {
     if (!name.trim()) return;
-    const cat = addCategory({ label: name.trim(), emoji, color });
+    const cat = addCategory({ label: name.trim(), emoji, color, spending });
     onCreated?.(cat);
     reset();
     onOpenChange(false);
@@ -111,6 +113,26 @@ export function CategoryModal({
               ))}
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setSpending((s) => !s)}
+            className="flex w-full items-center justify-between rounded-xl border border-stone-200 px-3 py-2.5 text-left transition-colors hover:bg-stone-50"
+          >
+            <span>
+              <span className="block text-sm font-medium text-stone-700">Involves spending money</span>
+              <span className="block text-[11px] text-stone-400">Show an amount field for activities in this category</span>
+            </span>
+            <span className={cn(
+              "relative h-5 w-9 shrink-0 rounded-full transition-colors",
+              spending ? "bg-amber-500" : "bg-stone-300"
+            )}>
+              <span className={cn(
+                "absolute top-0.5 h-4 w-4 rounded-full bg-white transition-transform",
+                spending ? "translate-x-4" : "translate-x-0.5"
+              )} />
+            </span>
+          </button>
 
           <div className="flex gap-2 pt-1">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1">

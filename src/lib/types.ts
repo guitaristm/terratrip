@@ -58,6 +58,8 @@ export interface ItineraryItem {
   category: string;
   amount?: number | null;
   currency: string;
+  location?: string | null;
+  link?: string | null;
   order: number;
   createdAt: Date;
   updatedAt: Date;

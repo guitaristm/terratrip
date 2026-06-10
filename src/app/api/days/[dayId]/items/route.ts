@@ -20,6 +20,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ day
         category: parsed.data.category,
         amount: parsed.data.amount ?? null,
         currency: parsed.data.currency,
+        location: parsed.data.location ?? null,
+        link: parsed.data.link ?? null,
         order: parsed.data.order ?? count,
       },
     });

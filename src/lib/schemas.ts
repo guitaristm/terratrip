@@ -18,6 +18,8 @@ export const ItineraryItemSchema = z.object({
   category: z.string().min(1).max(60),
   amount: z.coerce.number().min(0).optional(),
   currency: z.enum(["THB", "JPY", "USD"]),
+  location: z.string().max(500).optional(),
+  link: z.string().max(500).optional(),
   order: z.number().optional(),
 });
 
