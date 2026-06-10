@@ -5,13 +5,17 @@ import { api } from "@/lib/api";
 import { StatsCards } from "@/components/dashboard/stats-cards";
 import { SpendingChart } from "@/components/dashboard/spending-chart";
 import { formatDate, getDaysBetween } from "@/lib/utils";
+import { useIdentity } from "@/lib/identity";
 import type { Trip, Expense } from "@/lib/types";
 import { MapPin, Calendar, ArrowRight } from "lucide-react";
 
 export default function DashboardPage() {
+  const { user } = useIdentity();
   const [trips, setTrips] = useState<Trip[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const displayCurrency = user?.currency || trips[0]?.currency || "THB";
 
   useEffect(() => {
     const load = async () => {
@@ -47,7 +51,7 @@ export default function DashboardPage() {
         <p className="text-sm text-stone-500 mt-1">Welcome back! Here's your travel overview.</p>
       </div>
 
-      <StatsCards trips={trips} expenses={expenses} />
+      <StatsCards trips={trips} expenses={expenses} currency={displayCurrency} />
 
       {upcomingTrips.length > 0 && (
         <div>
@@ -88,7 +92,7 @@ export default function DashboardPage() {
 
       <div>
         <h2 className="text-base font-semibold text-stone-700 mb-3">Spending Overview</h2>
-        <SpendingChart expenses={expenses} currency="JPY" />
+        <SpendingChart expenses={expenses} currency={displayCurrency} />
       </div>
     </div>
   );

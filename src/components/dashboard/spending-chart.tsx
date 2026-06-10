@@ -1,16 +1,9 @@
 "use client";
 import { useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
+import { convertAmount } from "@/lib/utils";
+import { useCategories } from "@/lib/categories";
 import type { Expense } from "@/lib/types";
-
-const COLORS = {
-  food: "#f97316",
-  hotel: "#3b82f6",
-  transport: "#a855f7",
-  shopping: "#ec4899",
-  tickets: "#22c55e",
-  other: "#78716c",
-};
 
 interface SpendingChartProps {
   expenses: Expense[];
@@ -18,26 +11,31 @@ interface SpendingChartProps {
 }
 
 export function SpendingChart({ expenses, currency }: SpendingChartProps) {
+  const { getCategory } = useCategories();
+
   const categoryData = useMemo(() => {
     const totals: Record<string, number> = {};
     for (const e of expenses) {
-      totals[e.category] = (totals[e.category] ?? 0) + e.amount;
+      totals[e.category] = (totals[e.category] ?? 0) + convertAmount(e.amount, e.currency, currency);
     }
     return Object.entries(totals)
-      .map(([name, value]) => ({ name, value: Math.round(value) }))
+      .map(([key, value]) => {
+        const cat = getCategory(key);
+        return { name: cat.label, value: Math.round(value), color: cat.color };
+      })
       .sort((a, b) => b.value - a.value);
-  }, [expenses]);
+  }, [expenses, currency, getCategory]);
 
   const dailyData = useMemo(() => {
     const byDate: Record<string, number> = {};
     for (const e of expenses) {
       const d = new Date(e.date).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
-      byDate[d] = (byDate[d] ?? 0) + e.amount;
+      byDate[d] = (byDate[d] ?? 0) + convertAmount(e.amount, e.currency, currency);
     }
     return Object.entries(byDate)
       .map(([date, amount]) => ({ date, amount: Math.round(amount) }))
       .slice(-7);
-  }, [expenses]);
+  }, [expenses, currency]);
 
   if (expenses.length === 0) {
     return (
@@ -87,7 +85,7 @@ export function SpendingChart({ expenses, currency }: SpendingChartProps) {
                 innerRadius={35}
               >
                 {categoryData.map((entry) => (
-                  <Cell key={entry.name} fill={COLORS[entry.name as keyof typeof COLORS] ?? "#78716c"} />
+                  <Cell key={entry.name} fill={entry.color} />
                 ))}
               </Pie>
               <Tooltip

@@ -1,17 +1,18 @@
 "use client";
 import { Map, Calendar, DollarSign, TrendingUp } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, convertAmount } from "@/lib/utils";
 import type { Trip, Expense } from "@/lib/types";
 
 interface StatsCardsProps {
   trips: Trip[];
   expenses: Expense[];
+  currency: string;
 }
 
-export function StatsCards({ trips, expenses }: StatsCardsProps) {
+export function StatsCards({ trips, expenses, currency }: StatsCardsProps) {
   const upcomingTrips = trips.filter((t) => new Date(t.endDate) >= new Date()).length;
-  const totalBudget = trips.reduce((sum, t) => sum + t.budget, 0);
-  const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);
+  const totalBudget = trips.reduce((sum, t) => sum + convertAmount(t.budget, t.currency, currency), 0);
+  const totalSpent = expenses.reduce((sum, e) => sum + convertAmount(e.amount, e.currency, currency), 0);
   const nextTrip = trips
     .filter((t) => new Date(t.startDate) >= new Date())
     .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())[0];
@@ -37,15 +38,15 @@ export function StatsCards({ trips, expenses }: StatsCardsProps) {
     },
     {
       label: "Total Budget",
-      value: formatCurrency(totalBudget, "THB"),
+      value: formatCurrency(totalBudget, currency),
       sub: "across all trips",
       icon: DollarSign,
       gradient: "linear-gradient(135deg,#34d399,#059669)",
     },
     {
       label: "Total Spent",
-      value: formatCurrency(totalSpent, "JPY"),
-      sub: "across all expenses",
+      value: formatCurrency(totalSpent, currency),
+      sub: `${Math.round((totalBudget > 0 ? totalSpent / totalBudget : 0) * 100)}% of budget`,
       icon: TrendingUp,
       gradient: "linear-gradient(135deg,#c084fc,#7c3aed)",
     },
