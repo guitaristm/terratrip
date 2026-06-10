@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Trash2, Pencil, Users, Wallet, Check } from "lucide-react";
+import { Plus, Trash2, Pencil, Users, Wallet, Check, ArrowRight, Scale } from "lucide-react";
 import { api } from "@/lib/api";
 import type { Expense, Trip } from "@/lib/types";
 import type { ExpenseFormValues } from "@/lib/schemas";
@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate, computeSettlement } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/toast";
 import { useCategories } from "@/lib/categories";
@@ -247,6 +247,20 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
   }, {});
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
 
+  // ── Settle up (who owes whom) for split expenses ──
+  const nameMap = new Map<string, string>();
+  for (const p of participants) nameMap.set(p.id, p.name);
+  for (const e of expenses) {
+    if (e.paidById && e.paidByName && !nameMap.has(e.paidById)) nameMap.set(e.paidById, e.paidByName);
+  }
+  const nameOf = (id: string) => nameMap.get(id) ?? "Traveler";
+
+  const hasSplit = expenses.some(
+    (e) => e.splitMode === "equal" && e.paidById && (e.splitWith?.length ?? 0) > 0
+  );
+  const settlement = computeSettlement(expenses, trip.currency);
+  const nonZeroBalances = settlement.balances.filter((b) => Math.abs(b.net) >= 1);
+
   async function handleAdd(data: ExpenseFormValues) {
     setIsLoading(true);
     try {
@@ -313,6 +327,53 @@ export function ExpenseTracker({ trip }: { trip: Trip }) {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {hasSplit && (
+        <div className="mb-6 rounded-2xl border border-stone-100 bg-white p-4">
+          <div className="mb-3 flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+              <Scale className="h-4 w-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-stone-800">Settle up</h3>
+              <p className="text-xs text-stone-400">Based on split expenses · in {trip.currency}</p>
+            </div>
+          </div>
+
+          {settlement.transactions.length === 0 ? (
+            <p className="rounded-xl bg-stone-50 px-3 py-3 text-sm text-stone-500">All settled up 🎉</p>
+          ) : (
+            <div className="space-y-2">
+              {settlement.transactions.map((t, i) => (
+                <div key={i} className="flex items-center gap-2 rounded-xl bg-stone-50 px-3 py-2.5 text-sm">
+                  <span className="font-medium text-stone-800 truncate">{nameOf(t.from)}</span>
+                  <ArrowRight className="h-3.5 w-3.5 shrink-0 text-stone-400" />
+                  <span className="font-medium text-stone-800 truncate">{nameOf(t.to)}</span>
+                  <span className="ml-auto shrink-0 font-semibold text-amber-600">{formatCurrency(t.amount, trip.currency)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {nonZeroBalances.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5 border-t border-stone-100 pt-3">
+              {nonZeroBalances
+                .sort((a, b) => b.net - a.net)
+                .map((b) => (
+                  <span
+                    key={b.id}
+                    className={cn(
+                      "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium",
+                      b.net > 0 ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"
+                    )}
+                  >
+                    {nameOf(b.id)} {b.net > 0 ? "is owed" : "owes"} {formatCurrency(Math.abs(b.net), trip.currency)}
+                  </span>
+                ))}
+            </div>
+          )}
         </div>
       )}
 

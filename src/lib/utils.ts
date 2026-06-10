@@ -37,6 +37,60 @@ export function convertAmount(amount: number, from: string, to: string): number 
   return amount; // unknown currency — leave as-is
 }
 
+// ── Split-expense settlement ──────────────────────────────────────────
+export interface SettlementExpense {
+  amount: number;
+  currency: string;
+  paidById?: string | null;
+  splitMode?: string;
+  splitWith?: string[];
+}
+
+export interface SettlementResult {
+  /** Net position per person in `toCurrency`: positive = owed money, negative = owes. */
+  balances: { id: string; net: number }[];
+  /** Minimal set of payments to settle everyone up. */
+  transactions: { from: string; to: string; amount: number }[];
+}
+
+export function computeSettlement(expenses: SettlementExpense[], toCurrency: string): SettlementResult {
+  const bal = new Map<string, number>();
+  for (const e of expenses) {
+    if (e.splitMode !== "equal" || !e.paidById) continue;
+    const ids = e.splitWith ?? [];
+    if (ids.length === 0) continue;
+    const amt = convertAmount(e.amount, e.currency, toCurrency);
+    const share = amt / ids.length;
+    bal.set(e.paidById, (bal.get(e.paidById) ?? 0) + amt);
+    for (const id of ids) bal.set(id, (bal.get(id) ?? 0) - share);
+  }
+
+  const balances = [...bal.entries()].map(([id, net]) => ({ id, net }));
+
+  // Greedily match the biggest debtor to the biggest creditor.
+  const creditors = balances.filter((b) => b.net > 0.5).map((b) => ({ ...b })).sort((a, z) => z.net - a.net);
+  const debtors = balances.filter((b) => b.net < -0.5).map((b) => ({ id: b.id, net: -b.net })).sort((a, z) => z.net - a.net);
+
+  const transactions: { from: string; to: string; amount: number }[] = [];
+  let i = 0;
+  let j = 0;
+  while (i < debtors.length && j < creditors.length) {
+    const pay = Math.min(debtors[i].net, creditors[j].net);
+    if (pay > 0.5) {
+      transactions.push({ from: debtors[i].id, to: creditors[j].id, amount: Math.round(pay) });
+    }
+    debtors[i].net -= pay;
+    creditors[j].net -= pay;
+    if (debtors[i].net < 0.5) i++;
+    if (creditors[j].net < 0.5) j++;
+  }
+
+  return {
+    balances: balances.map((b) => ({ id: b.id, net: Math.round(b.net) })),
+    transactions,
+  };
+}
+
 export function getDaysBetween(start: Date | string, end: Date | string): number {
   const s = new Date(start);
   const e = new Date(end);
