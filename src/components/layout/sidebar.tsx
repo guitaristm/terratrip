@@ -37,7 +37,7 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
                 active
                   ? "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300"
-                  : "text-stone-500 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-stone-800"
+                  : "text-stone-500 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-800 hover:text-stone-800 dark:hover:text-stone-100"
               )}
             >
               <Icon className={cn("h-4 w-4", active ? "text-amber-600" : "text-stone-400 dark:text-stone-500")} />
@@ -74,7 +74,7 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
             <button
               onClick={() => signOut()}
               title="Sign out"
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-stone-400 dark:text-stone-500 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-600"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-stone-400 dark:text-stone-500 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-600 dark:hover:text-stone-200"
             >
               <LogOut className="h-3.5 w-3.5" />
             </button>
@@ -133,7 +133,7 @@ export function Sidebar() {
             <button
               aria-label="Close menu"
               onClick={() => setOpen(false)}
-              className="absolute right-3 top-3 p-1.5 rounded-lg text-stone-400 dark:text-stone-500 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-600 transition-colors"
+              className="absolute right-3 top-3 p-1.5 rounded-lg text-stone-400 dark:text-stone-500 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-600 dark:hover:text-stone-200 transition-colors"
             >
               <X className="h-4 w-4" />
             </button>

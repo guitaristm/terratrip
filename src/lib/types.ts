@@ -18,6 +18,7 @@ export interface Trip {
   endDate: Date;
   budget: number;
   currency: string;
+  coverImage?: string | null;
   createdAt: Date;
   updatedAt: Date;
   members?: TripMember[];

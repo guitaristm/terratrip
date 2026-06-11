@@ -9,9 +9,10 @@ import { ExpenseTracker } from "@/components/itinerary/expense-tracker";
 import { CollaboratorPanel } from "@/components/itinerary/collaborator-panel";
 import { Button } from "@/components/ui/button";
 import { formatDate, getDaysBetween, formatCurrency } from "@/lib/utils";
-import { ArrowLeft, MapPin, Calendar, DollarSign, Users, Map, BarChart2, Pencil } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, DollarSign, Users, Map, BarChart2, Pencil, ImagePlus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { TripForm, tripToFormValues } from "@/components/trips/trip-form";
+import { CoverPicker } from "@/components/trips/cover-picker";
 import type { TripFormValues } from "@/lib/schemas";
 import { useToast } from "@/components/ui/toast";
 
@@ -31,8 +32,18 @@ export default function TripDetailPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>("itinerary");
   const [editOpen, setEditOpen] = useState(false);
+  const [coverOpen, setCoverOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  async function handleCover(coverImage: string | null) {
+    if (!trip) return;
+    try {
+      const updated = await api.trips.update(trip.id, { coverImage });
+      setTrip(updated);
+      toast(coverImage ? "Cover photo updated!" : "Cover photo removed.");
+    } catch { toast("Failed to update cover", "error"); }
+  }
 
   useEffect(() => {
     api.trips.get(id)
@@ -66,19 +77,31 @@ export default function TripDetailPage() {
 
   return (
     <div className="animate-fade-in-up">
-      <Link href="/trips" className="inline-flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400 hover:text-stone-800 mb-5 transition-colors">
+      <Link href="/trips" className="inline-flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-100 mb-5 transition-colors">
         <ArrowLeft className="h-4 w-4" /> Back to trips
       </Link>
 
-      <div className="relative mb-6 overflow-hidden rounded-3xl border border-amber-200/50 p-6 text-white shadow-lg shadow-amber-900/10"
-        style={{ background: "linear-gradient(135deg,#f59e0b 0%,#d97706 55%,#b45309 100%)" }}>
-        <div className="pointer-events-none absolute -right-8 -top-10 text-[160px] opacity-15 select-none">{flag}</div>
+      <div
+        className="relative mb-6 overflow-hidden rounded-3xl border border-amber-200/50 dark:border-stone-700 p-6 text-white shadow-lg shadow-amber-900/10"
+        style={
+          trip.coverImage
+            ? {
+                backgroundImage: `linear-gradient(135deg, rgba(20,12,0,0.62) 0%, rgba(0,0,0,0.35) 100%), url('${trip.coverImage}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : { background: "linear-gradient(135deg,#f59e0b 0%,#d97706 55%,#b45309 100%)" }
+        }
+      >
+        {!trip.coverImage && (
+          <div className="pointer-events-none absolute -right-8 -top-10 text-[160px] opacity-15 select-none">{flag}</div>
+        )}
         <div className="relative flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium backdrop-blur">
               <MapPin className="h-3 w-3" /> {trip.country}
             </div>
-            <h1 className="text-2xl font-bold tracking-tight">{flag} {trip.name}</h1>
+            <h1 className="text-2xl font-bold tracking-tight drop-shadow-sm">{flag} {trip.name}</h1>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-2.5 py-1 text-xs font-medium backdrop-blur">
                 <Calendar className="h-3.5 w-3.5" /> {formatDate(trip.startDate)} — {formatDate(trip.endDate)}
@@ -91,21 +114,31 @@ export default function TripDetailPage() {
               </span>
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setEditOpen(true)}
-            className="shrink-0 border-white/40 bg-white/15 text-white backdrop-blur hover:bg-white/25 hover:text-white"
-          >
-            <Pencil className="h-3.5 w-3.5" /> Edit
-          </Button>
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCoverOpen(true)}
+              className="border-white/40 bg-white/15 text-white backdrop-blur hover:bg-white/25 hover:text-white"
+            >
+              <ImagePlus className="h-3.5 w-3.5" /> Photo
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setEditOpen(true)}
+              className="border-white/40 bg-white/15 text-white backdrop-blur hover:bg-white/25 hover:text-white"
+            >
+              <Pencil className="h-3.5 w-3.5" /> Edit
+            </Button>
+          </div>
         </div>
       </div>
 
       <div className="mb-6 flex w-full gap-1 overflow-x-auto rounded-xl bg-stone-100 dark:bg-stone-800 p-1 sm:w-fit">
         {tabs.map((tab) => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-            className={`flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all sm:flex-none ${activeTab === tab.id ? "bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-100 shadow-sm" : "text-stone-500 dark:text-stone-400 hover:text-stone-700"}`}>
+            className={`flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all sm:flex-none ${activeTab === tab.id ? "bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-100 shadow-sm" : "text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-100"}`}>
             {tab.icon} {tab.label}
           </button>
         ))}
@@ -121,6 +154,8 @@ export default function TripDetailPage() {
           <TripForm defaultValues={tripToFormValues(trip)} onSubmit={handleEdit} onCancel={() => setEditOpen(false)} submitLabel="Save Changes" isLoading={isLoading} />
         </DialogContent>
       </Dialog>
+
+      <CoverPicker open={coverOpen} onOpenChange={setCoverOpen} current={trip.coverImage} onApply={handleCover} />
     </div>
   );
 }

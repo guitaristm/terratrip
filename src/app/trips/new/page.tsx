@@ -33,7 +33,7 @@ export default function NewTripPage() {
 
   return (
     <div className="max-w-lg">
-      <Link href="/trips" className="inline-flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400 hover:text-stone-800 mb-6 transition-colors">
+      <Link href="/trips" className="inline-flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-100 mb-6 transition-colors">
         <ArrowLeft className="h-4 w-4" /> Back to trips
       </Link>
       <h1 className="text-xl font-bold text-stone-800 dark:text-stone-100 mb-6">Create New Trip</h1>

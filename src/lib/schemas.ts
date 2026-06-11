@@ -7,6 +7,7 @@ export const TripSchema = z.object({
   endDate: z.string().min(1, "End date is required"),
   budget: z.coerce.number().min(0, "Budget must be non-negative"),
   currency: z.enum(["THB", "JPY", "USD"]),
+  coverImage: z.string().max(1000).nullable().optional(),
 });
 
 export type TripFormValues = z.infer<typeof TripSchema>;

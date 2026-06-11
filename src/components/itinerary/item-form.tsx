@@ -98,7 +98,7 @@ export function ItemForm({ defaultValues, onSubmit, onCancel, submitLabel = "Sav
         <div className="space-y-1.5">
           <Label className="flex items-center justify-between">
             <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Location</span>
-            <button type="button" onClick={() => { setShowLocation(false); setValue("location", ""); }} className="text-stone-400 dark:text-stone-500 hover:text-stone-600"><X className="h-3.5 w-3.5" /></button>
+            <button type="button" onClick={() => { setShowLocation(false); setValue("location", ""); }} className="text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-200"><X className="h-3.5 w-3.5" /></button>
           </Label>
           <Input placeholder="Google Maps link or place name" {...register("location")} />
         </div>
@@ -109,7 +109,7 @@ export function ItemForm({ defaultValues, onSubmit, onCancel, submitLabel = "Sav
         <div className="space-y-1.5">
           <Label className="flex items-center justify-between">
             <span className="flex items-center gap-1.5"><LinkIcon className="h-3.5 w-3.5" /> Link</span>
-            <button type="button" onClick={() => { setShowLink(false); setValue("link", ""); }} className="text-stone-400 dark:text-stone-500 hover:text-stone-600"><X className="h-3.5 w-3.5" /></button>
+            <button type="button" onClick={() => { setShowLink(false); setValue("link", ""); }} className="text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-200"><X className="h-3.5 w-3.5" /></button>
           </Label>
           <Input placeholder="https://… (website, booking, etc.)" {...register("link")} />
         </div>

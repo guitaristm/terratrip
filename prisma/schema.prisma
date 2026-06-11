@@ -29,6 +29,7 @@ model Trip {
   endDate     DateTime
   budget      Float        @default(0)
   currency    String       @default("THB")
+  coverImage  String?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   members     TripMember[]

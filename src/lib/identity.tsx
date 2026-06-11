@@ -159,7 +159,7 @@ function IdentityGate({ onDone }: { onDone: (u: Identity) => void }) {
               <button
                 disabled={submitting}
                 onClick={() => { setMatches(null); setError(null); }}
-                className="w-full pt-1 text-center text-xs text-stone-400 dark:text-stone-500 hover:text-stone-600"
+                className="w-full pt-1 text-center text-xs text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-200"
               >
                 ← Use a different name
               </button>
